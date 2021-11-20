@@ -10,35 +10,43 @@ if [ -d ~/Git/sagecat-environment ]; then
   cd ~/Git/sagecat-environment
 
   # NEOVIM
-  cp -r ./nvim ~/.config/nvim
+  cp -rf ./nvim ~/.config/nvim
   if [ $? -eq 0 ]; then
-    echo "Neovim     ${green}OK${textreset}"
+    echo "Neovim... ${green}OK${textreset}"
   else
-    echo "Neovim     ${red}ERROR${textreset}"
+    echo "Neovim...  ${red}ERROR${textreset}"
   fi
 
   # ALACRITTY
   cp -r ./alacritty ~/.config/alacritty
   if [ $? -eq 0 ]; then
-    echo "Alacritty     ${green}OK${textreset}"
+    echo "Alacritty... ${green}OK${textreset}"
   else
-    echo "Alacritty     ${red}ERROR${textreset}"
+    echo "Alacritty...  ${red}ERROR${textreset}"
   fi
 
   # ZSH
   cp ./zshrc ~/.zshrc
   if [ $? -eq 0 ]; then
-    echo "ZSH     ${green}OK${textreset}"
+    echo "ZSH... ${green}OK${textreset}"
   else
-    echo "ZSH     ${red}ERROR${textreset}"
+    echo "ZSH...  ${red}ERROR${textreset}"
   fi
 
   # MY SCRIPTS
   cp ./scripts/* ~/bin
   if [ $? -eq 0 ]; then
-    echo "My scripts     ${green}OK${textreset}"
+    echo "My scripts... ${green}OK${textreset}"
   else
-    echo "My scripts     ${red}ERROR${textreset}"
+    echo "My scripts...  ${red}ERROR${textreset}"
+  fi
+
+  # ATOM
+  if ! command -v atom &> /dev/null; then
+    echo "Atom... ${red}IS NOT FOUND${textreset}"
+  else
+    apm install --packages-file atom/atom-package-list.txt
+    echo "Atom... ${green}OK${textreset}"
   fi
 
   cd - &> /dev/null;

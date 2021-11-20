@@ -10,9 +10,13 @@ get_environment_from_current_os()
 {
   # NEOVIM
   if [ -d ~/.config/nvim ]; then
-    rm -rf nvim &> /dev/null;
-    cp -r ~/.config/nvim ./nvim;
-    echo "Neovim...     ${green}OK${textreset}"
+    rm -rf nvim/* &> /dev/null
+    files_to_copy=$(find ~/.config/nvim -type d -name 'autoload' -prune -o -type f -print)
+    for file in ${files_to_copy[*]}
+    do
+      cp -r $file ./nvim/;
+    done
+    echo "Neovim... ${green}OK${textreset}"
   else
     echo "Neovim...     ${yellow}CONFIG IS NOT FOUND, OLD VERSION LEFT${textreset}"
   fi
@@ -21,7 +25,7 @@ get_environment_from_current_os()
   if [ -d ~/.config/alacritty ]; then
     rm -rf alacritty &> /dev/null;
     cp -r ~/.config/alacritty ./alacritty;
-    echo "Alacritty...     ${green}OK${textreset}"
+    echo "Alacritty... ${green}OK${textreset}"
   else
     echo "Alacritty...     ${yellow}CONFIG IS NOT FOUND, OLD VERSION LEFT${textreset}"
   fi
@@ -30,7 +34,7 @@ get_environment_from_current_os()
   if [ -f ~/.zshrc ]; then
     rm -f zshrc &> /dev/null;
     cp ~/.zshrc ./zshrc;
-    echo "ZSH...     ${green}OK${textreset}"
+    echo "ZSH... ${green}OK${textreset}"
   else
     echo "ZSH...     ${yellow}CONFIG IS NOT FOUND, OLD VERSION LEFT${textreset}"
   fi
@@ -39,9 +43,18 @@ get_environment_from_current_os()
   if [ -d ~/bin ]; then
     rm -rf scripts/* &> /dev/null;
     cp ~/bin/*.sh ./scripts;
-    echo "My scripts...     ${green}OK${textreset}"
+    echo "My scripts... ${green}OK${textreset}"
   else
-    echo "My scripts...     ${yellow}IS NOT FOUND, OLD VERSION LEFT${textreset}"
+    echo "My scripts... ${yellow}IS NOT FOUND, OLD VERSION LEFT${textreset}"
+  fi
+
+  # ATOM
+  if ! command -v atom &> /dev/null; then
+    echo "Atom... ${yellow}IS NOT FOUND, OLD VERSION LEFT${textreset}"
+  else
+    rm -f atom/atom-package-list.txt
+    apm list --installed --bare > atom/atom-package-list.txt
+    echo "Atom... ${green}OK${textreset}"
   fi
 
   # README
