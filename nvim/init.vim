@@ -11,4 +11,4 @@ source $HOME/.config/nvim/keys/mappings.vim
 source $HOME/.config/nvim/themes/airline.vim
 
 "Compile&Run
-source $HOME/.config/nvim/build/cpp.vim
+source $HOME/.config/nvim/sdk/cpp.vim
