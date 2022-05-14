@@ -6,67 +6,60 @@ red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 
-get_environment_from_current_os()
+c_echo()
 {
-  # NEOVIM
-  if [ -d ~/.config/nvim ]; then
-    rm -rf nvim/* &> /dev/null
-    files_to_copy=$(find ~/.config/nvim -type d -name 'autoload' -prune -o -type f -print)
-    for file in ${files_to_copy[*]}
-    do
-      cp -r $file ./nvim/;
-    done
-    echo "Neovim... ${green}OK${textreset}"
-  else
-    echo "Neovim...     ${yellow}CONFIG IS NOT FOUND, OLD VERSION LEFT${textreset}"
+  if [ -n "$1" ] ; then
+      echo "$@"
   fi
-
-  # ALACRITTY
-  if [ -d ~/.config/alacritty ]; then
-    rm -rf alacritty &> /dev/null;
-    cp -r ~/.config/alacritty ./alacritty;
-    echo "Alacritty... ${green}OK${textreset}"
-  else
-    echo "Alacritty...     ${yellow}CONFIG IS NOT FOUND, OLD VERSION LEFT${textreset}"
-  fi
-
-  # ZSH
-  if [ -f ~/.zshrc ]; then
-    rm -f zshrc &> /dev/null;
-    cp ~/.zshrc ./zshrc;
-    echo "ZSH... ${green}OK${textreset}"
-  else
-    echo "ZSH...     ${yellow}CONFIG IS NOT FOUND, OLD VERSION LEFT${textreset}"
-  fi
-
-  # MY SCRIPTS
-  if [ -d ~/bin ]; then
-    rm -rf scripts/* &> /dev/null;
-    cp ~/bin/*.sh ./scripts;
-    echo "My scripts... ${green}OK${textreset}"
-  else
-    echo "My scripts... ${yellow}IS NOT FOUND, OLD VERSION LEFT${textreset}"
-  fi
-
-  # ATOM
-  if ! command -v atom &> /dev/null; then
-    echo "Atom... ${yellow}IS NOT FOUND, OLD VERSION LEFT${textreset}"
-  else
-    rm -f atom/atom-package-list.txt
-    apm list --installed --bare > atom/atom-package-list.txt
-    echo "Atom... ${green}OK${textreset}"
-  fi
-
-  # README
-  rm -f README.md &> /dev/null;
-  echo "SageCat-Environment <br/>  Version for: $(date)" >> README.md
-
-  cd - &> /dev/null;
 }
 
-if [ -d ~/Git/sagecat-environment ]; then
-  cd ~/Git/sagecat-environment
-  get_environment_from_current_os
-else
-  echo "Git repository is ${red}NOT FOUND${textreset}"
-fi
+get_config()
+{
+  export CONFIG_NAME=$1
+  export SOURCE=$2
+  export IGNORE_DIR_NAME=$3
+
+  echo "--- Copying $CONFIG_NAME config ---"
+
+  # CREATE DIR
+  echo "${yellow}Removing old dir!${textreset}"
+  c_echo $(rm -rfI $CONFIG_NAME)
+  c_echo $(mkdir $CONFIG_NAME 2>&1) 
+
+  # COPY CONFIG
+  if [ -d $SOURCE ]; then # if dir
+    c_echo $(cp -r $SOURCE/* $CONFIG_NAME/ 2>&1)
+  else
+    c_echo $(cp $SOURCE $CONFIG_NAME/ 2>&1)
+  fi
+
+  # REMOVE IGNORED DIRECTORY
+  if [ ! -z $IGNORE_DIR_NAME ]; then
+    c_echo $(rm -rf "$CONFIG_NAME/$IGNORE_DIR_NAME" 2>&1)
+  fi
+
+  if [ -d $CONFIG_NAME ] && [ "$(ls -A $CONFIG_NAME)" ]; then
+    echo "$CONFIG_NAME... ${green}SUCCESS${textreset}"
+  else
+    echo "$CONFIG_NAME... ${red}FAILED${textreset}"
+  fi
+
+  echo
+}
+
+# NVIM
+get_config "nvim" ~/.config/nvim "autoload"
+
+# ALACRITTY
+get_config "alacritty" ~/.config/alacritty
+
+# ZSH
+get_config "zsh" ~/.zshrc
+
+# TMUX
+get_config "tmux" ~/.tmux.conf
+
+# README
+rm -f README.md &> /dev/null;
+echo "SageCat-Environment <br/>  Version for: $(date)" >> README.md
+

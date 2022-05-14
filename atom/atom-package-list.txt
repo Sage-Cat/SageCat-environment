@@ -1,6 +1,0 @@
-Sublime-Style-Column-Selection@1.7.5
-autocomplete-bash-builtins@0.3.5
-autocomplete-clang@0.13.1
-script@3.32.2
-terminal-tab@0.6.0
-vim-mode-plus@1.36.6
