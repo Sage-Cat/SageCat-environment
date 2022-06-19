@@ -1,0 +1,57 @@
+# Config folder
+export ZSHRC_DIR="$HOME/.config/zsh"
+
+# --- Antigen BEGIN --- https://github.com/zsh-users/antigen
+source $ZSHRC_DIR/external/antigen.zsh
+
+antigen use oh-my-zsh
+
+antigen bundle git
+antigen bundle pip
+antigen bundle command-not-found
+
+antigen theme gnzh
+
+antigen bundle zsh-users/zsh-syntax-highlighting
+
+antigen apply
+# --- Antigen END --- 
+
+# Uncomment the following line to automatically update without prompting.
+DISABLE_UPDATE_PROMPT="true"
+
+# Uncomment the following line to change how often to auto-update (in days).
+export UPDATE_ZSH_DAYS=14
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
+
+# Uncomment the following line to enable command auto-correction.
+#ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# Caution: this setting can cause issues with multiline prompts (zsh 5.7.1 and newer seem to work)
+# See https://github.com/ohmyzsh/ohmyzsh/issues/5765
+COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+
+# Local settings
+export LOCAL_ZSHRC="$HOME/.zshrc.local"
+if [[ -f "$LOCAL_ZSHRC" ]]; then
+    source $LOCAL_ZSHRC
+fi
+
+# Exports
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+export GIT_DIR=$HOME/git
+
+# Aliases
+alias rm="rm -Iv"
+alias psg="ps aux | grep "
+
+fpath+=${ZDOTDIR:-~}/.zsh_functions
